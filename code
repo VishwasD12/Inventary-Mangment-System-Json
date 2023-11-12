@@ -1,0 +1,77 @@
+record = {1:{"Name": "5-star"         , "Price": 5  , "Qn":100},
+         2:{"Name": "Bar-one"        , "Price": 10 , "Qn":200},
+         3:{"Name": "Candy"          , "Price": 2  , "Qn":1000},
+         4:{"Name": "Choclate Cake"  , "Price": 550, "Qn":10},
+         5:{"Name": "BlueBerry Cake" , "Price": 650, "Qn":5}}
+import json
+import time
+fd = open("Record.json",'r')
+js = fd.read()
+fd.close()
+
+sales = ' '
+record = json.loads(js)
+
+print("------------------------Menu----------------------------")
+
+for key in record.keys():
+    print(key,":", record[key]["Name"],"|", record[key]["Price"],"|", record[key]["Qn"])
+    
+print("---------------------------------------------------------")
+
+ui_name = input("Enter your name         : ")
+ui_mail = input("Enter the mail id       : ")
+ui_ph = input("Enter the phone no.       : ")
+ui_prod = str(input("Enter the product id: "))
+ui_qn = int(input("Enter the quantity    : "))
+
+if record[ui_prod]["Qn"] >= ui_qn:
+    
+    record[ui_prod]["Qn"] = record[ui_prod]["Qn"] - ui_qn;
+
+    print("----------------------------------------------------------")
+    print("                           Bill                           ")
+
+    print("Name                :", record[ui_prod]["Name"])
+    print("Price               :", record[ui_prod]["Price"],"Rs")
+    print("Quantity            :", ui_qn)
+
+    print("-----------------------------------------------------------")
+    print("Billing Amount      :", record[ui_prod]["Price"] * ui_qn,"Rs")
+    print("-----------------------------------------------------------")
+    sales = ui_name +","+ ui_mail +","+ ui_ph +","+ ui_prod +","+ record[ui_prod]["Name"] +","+ str(ui_qn) +","+ str(record[ui_prod]["Price"]) +","+  str(record[ui_prod]["Price"] * ui_qn) +","+ time.ctime() + '\n'
+else:
+    print("Sorry.We are not having enough Quantity.")
+    print("We are only having", record[ui_prod]["Qn"], 'quantity.')
+    print("--------------------------------------------------")
+    
+    ch = input("Press Y or y to purchase: ")
+    
+    if ch == "Y" or 'y':
+        print("----------------------------------------------------------")
+        print("                           Bill                           ")
+
+        print("Name                :", record[ui_prod]["Name"])
+        print("Price               :", record[ui_prod]["Price"],"Rs")
+        print("Quantity            :", record[ui_prod]["Qn"])
+
+        print("-----------------------------------------------------------")
+        print("Billing Amount      :", record[ui_prod]["Price"] * record[ui_prod]["Qn"],"Rs")
+        print("-----------------------------------------------------------")
+        record[ui_prod]["Qn"] = 0
+        sales = ui_name +","+ ui_mail +","+ ui_ph +","+ ui_prod +","+ record[ui_prod]["Name"] +","+ str(record[ui_prod]["Qn"]) +","+ str(record[ui_prod]["Price"]) +","+ str(record[ui_prod]["Price"] * record[ui_prod]["Qn"]) +","+ time.ctime() + '\n'
+    else:
+        print("Thans!")
+js = json.dumps(record)
+
+fd = open("Record.json",'w')
+fd.write(js)
+fd.close()
+
+fd = open('Sales.txt','a')
+fd.write(sales)
+fd.close()
+
+print('--------------------------------------------')
+print("Thank you for Shoping.Inventary Updated")
+print('--------------------------------------------')
